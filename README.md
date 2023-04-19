@@ -4,6 +4,12 @@
 
 It organize files as per their type in the given directory.
 
+# Introduction Video of the App
+
+
+https://user-images.githubusercontent.com/75939608/232980869-c99f8ede-3205-42d9-9154-004ba323a58c.mov
+
+
 ## Tech Stack
 
 **Backend technologies:** 
