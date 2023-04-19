@@ -2,7 +2,7 @@ import tkinter as tk
 import tkinter.messagebox as msgb
 import os 
 import shutil
-
+import filecmp
 
 root = tk.Tk()
 root.title('File Organizer App')
@@ -14,16 +14,16 @@ def organize_files():
         path = entry_field.get()
         files = os.listdir(path)
         for file in files:
-            
             if os.path.isfile(os.path.join(path,file)):
-                name, extension = file.split('.')
-                if extension == 'DS_Store':
+                name, extension = os.path.splitext(file)
+                if extension.lower() in ['.ds_store', '.ini']:
                     continue
-                if os.path.exists(f"{path}/{extension}"):
-                    shutil.move(f"{path}/{file}",f"{path}/{extension}/{file}")
-                else:
-                    os.makedirs(f"{path}/{extension}")
-                    shutil.move(f"{path}/{file}",f"{path}/{extension}/{file}")
+                dest_dir = os.path.join(path, extension[1:].lower())
+                if not os.path.exists(dest_dir):
+                    os.makedirs(dest_dir)
+                dest_file = os.path.join(dest_dir, file)
+                if not os.path.exists(dest_file) or not filecmp.cmp(os.path.join(path, file), dest_file):    #filecmp.cmp check if the same file name exists or not in the organized folder 
+                    shutil.move(os.path.join(path, file), dest_file)
         msgb.showinfo(title='Success', message="All the files inside the added folder were organized")
     except ValueError:
         msgb.showerror(title='Error', message="There are not any file for organizing. Please make sure that you have added right path")
@@ -38,3 +38,4 @@ confirm_button = tk.Button(root,text='Confirm', command=organize_files)
 confirm_button.pack()
 
 root.mainloop()
+
